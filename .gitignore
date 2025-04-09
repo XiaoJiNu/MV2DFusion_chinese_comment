@@ -1,0 +1,15 @@
+
+## 添加以下内容到.gitignore文件
+
+```language=
+# 忽略packages相关文件
+packages.zip
+packages/
+
+# 忽略weights目录
+weights/
+
+# 如果有其他大文件也想忽略，可以添加在这里
+*.pth
+*.ckpt
+```
