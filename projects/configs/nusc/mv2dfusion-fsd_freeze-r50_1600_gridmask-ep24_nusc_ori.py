@@ -41,8 +41,8 @@ tasks = [
 ]
 
 # training hyperparameter
-num_gpus = 1 # 修改为你的GPU数量
-batch_size = 1
+num_gpus = 8
+batch_size = 2
 num_iters_per_epoch = 28130 // (num_gpus * batch_size)
 num_epochs = 24
 queue_length = 1
@@ -83,8 +83,7 @@ model = dict(
         init_cfg=dict(
             type='Pretrained', checkpoint=img_ckpt,
             prefix='neck.', map_location='cpu'),
-        # norm_cfg=dict(type='SyncBN'),
-        norm_cfg=dict(type='BN2d'),  # 单卡训练时修改为BN2d
+        norm_cfg=dict(type='SyncBN'),
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
@@ -165,7 +164,7 @@ model = dict(
                 debug=False),
             rpn_proposal=dict(
                 nms_pre=2000,
-                max_per_img=300,  # 单卡训练显存不够，减少每个图像的proposals，1000减小为300
+                max_per_img=1000,
                 nms=dict(type='nms', iou_threshold=0.7),
                 min_bbox_size=0),
             rcnn=dict(
@@ -500,7 +499,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 ida_aug_conf = {
     "resize_lim": (0.94, 1.25),
-    "final_dim": (160, 400),  # 单卡训练显存不够，减小图像尺寸，默认(640, 1600)
+    "final_dim": (640, 1600),
     "bot_pct_lim": (0.0, 0.0),
     "rot_lim": (0.0, 0.0),
     "H": 900,
@@ -509,7 +508,7 @@ ida_aug_conf = {
 }
 
 dataset_type = 'CustomNuScenesDataset'
-data_root = '/home/yr/yr/data/nuscenes/v1.0-mini/'
+data_root = './data/nuscenes/'
 
 train_pipeline = [
     dict(
@@ -673,20 +672,3 @@ resume_from = None
 # mAAE: 0.1906
 # NDS: 0.7481
 # Eval time: 92.9s
-
-# fp16 = dict(loss_scale=512.)
-
-# 添加自定义日志钩子
-custom_hooks = [
-    dict(type='CustomTextLoggerHook', by_epoch=False)
-]
-
-# 禁用默认的文本日志钩子
-log_config = dict(
-    interval=50,
-    hooks=[
-        # 移除默认的TextLoggerHook
-        # dict(type='TextLoggerHook'),
-        # 保留其他可能存在的日志钩子，如TensorboardLoggerHook
-        dict(type='TensorboardLoggerHook')
-    ])

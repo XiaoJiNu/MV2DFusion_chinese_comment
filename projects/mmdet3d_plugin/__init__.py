@@ -8,3 +8,6 @@ from .models.detectors import *
 from .models.backbones import *
 from .models.query_generators import *
 from .ops.norm import MyBN1d
+from .core import CustomTextLoggerHook
+
+__all__ = ['CustomTextLoggerHook']

@@ -135,6 +135,8 @@ def custom_train_detector(model,
     # fp16 setting
     fp16_cfg = cfg.get('fp16', None)
     if fp16_cfg is not None:
+        print("fp16_cfg", fp16_cfg)  # 打印fp16_cfg
+        print("cfg.optimizer_config", cfg.optimizer_config)  # 打印cfg.optimizer_config
         optimizer_config = Fp16OptimizerHook(
             **cfg.optimizer_config, **fp16_cfg, distributed=distributed)
     elif distributed and 'type' not in cfg.optimizer_config:
