@@ -143,8 +143,16 @@ def custom_train_detector(model,
         optimizer_config = cfg.optimizer_config
 
     # register hooks
-    runner.register_training_hooks(cfg.lr_config, optimizer_config,
-                                   cfg.checkpoint_config, cfg.log_config,
+    # 注册训练过程中需要的各种钩子函数
+    # lr_config: 学习率调整策略配置，如StepLR、CosineAnnealingLR等
+    # optimizer_config: 优化器配置，包括梯度裁剪等设置
+    # checkpoint_config: 模型检查点保存配置，如保存频率、保存最佳模型等
+    # log_config: 日志配置，包括TensorBoard、文本日志等
+    # momentum_config: 动量更新配置，如果有的话
+    runner.register_training_hooks(cfg.lr_config, 
+                                   optimizer_config,
+                                   cfg.checkpoint_config, 
+                                   cfg.log_config,
                                    cfg.get('momentum_config', None))
     
     # register profiler hook
