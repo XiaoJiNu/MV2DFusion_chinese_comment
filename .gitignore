@@ -1,0 +1,19 @@
+# 忽略权重文件目录
+weights/
+weights/**
+
+# 忽略工作目录
+work_dirs/
+work_dirs/**
+
+# 忽略所有zip文件
+*.zip
+
+# 可能需要忽略的其他大文件类型
+*.pth
+*.pt
+*.bin
+*.onnx
+*.pkl
+*.ckpt
+
